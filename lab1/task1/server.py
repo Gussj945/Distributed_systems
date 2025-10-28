@@ -15,6 +15,7 @@ async def forward_ping(other_port):
         uri = f"ws://localhost:{other_port}"
         async with websockets.connect(uri) as websocket:
             await websocket.send("ping")
+            logging.info(f"forwarded ping to {other_port}")
             response = await websocket.recv()
             return response
     except Exception as e: 
@@ -29,8 +30,9 @@ async def handler(websocket, other_port=None):
                 if other_port:
                     pong_msg = await forward_ping(other_port)
                     await websocket.send(pong_msg)
-            else:
-                await websocket.send("pong")
+                    logging.info("forwarded pong to ")
+                else:
+                    await websocket.send("pong")
     except Exception as e: 
         logging.exception(f"error in handler: {e}")
 

@@ -4,11 +4,14 @@ import asyncio
 from websockets.asyncio.client import connect
 import sys
 
-
+logging.basicConfig(
+format= "%(asctime)s %(message)s",
+level=logging.DEBUG,
+)
 
 async def connectToServer():
     server = sys.argv[1]
-    connection = await connect(f"ws://localhost:{server}/") #connect to server (PORT 10000)
+    connection = await connect(f"ws://localhost:{server}/") #connect to server 
     # Connect to server
     await connection.send("ping") # Send a message
     response = await connection.recv() # Receive next message
