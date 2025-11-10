@@ -17,6 +17,7 @@ async def forward_ping(other_port):
             await websocket.send("ping")
             logging.info(f"forwarded ping to {other_port}")
             response = await websocket.recv()
+            print(f"message in forward_ping the message from {other_port} is {response}")
             return response
     except Exception as e: 
         logging.exception(f"error in forward_ping: {e}")

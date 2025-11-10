@@ -14,6 +14,7 @@ async def connectToServer():
     connection = await connect(f"ws://localhost:{server}/") #connect to server 
     # Connect to server
     await connection.send("ping") # Send a message
+    print("PING")
     response = await connection.recv() # Receive next message
     await connection.close() # Close
 

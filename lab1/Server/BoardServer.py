@@ -5,10 +5,10 @@ import json
 from websockets.asyncio.server import serve
 import logging
 
-""" logging.basicConfig(
+logging.basicConfig(
     format= "%(asctime)s %(message)s",
     level=logging.DEBUG,
-) """
+)
 
 # Storage in which the messages of the message board are stored.
 storage = None
@@ -37,38 +37,44 @@ async def stub(request):
     match command:
         case "put":
             message = request["Message"]
-            result = await storage.put(message)
+            senderID = request.get("MYID", -1)
+            result = await storage.put(message, senderID)
             return "Done"
         case "get":
             try:
                 index = request["Index"]
-                result = await storage.get(index)
+                senderID = request.get("MYID", -1)
+                result = await storage.get(index, senderID)
                 return result
             except IndexError:
                 return "UNKNOWN_INDEX" #CLIENT DOESNT DETECT ERROR AND PRINTSS MESSAGE 0: NONE INSTEAD WHAT TO DO?
         case "getnum":
-            result = await storage.getNum()
+            senderID = request.get("MYID", -1)
+            result = await storage.getNum(senderID)
             return result
         case "getboard":
-            result = await storage.getBoard()
+            senderID = request.get("MYID", -1)
+            result = await storage.getBoard(senderID)
             return result
         case "modify":
             try: 
+                senderID = request.get("MYID", -1)
                 index = request["Index"]
                 message = request["Message"]
-                result = await storage.modify(index, message)
+                result = await storage.modify(index, message, senderID)
                 return "DONE" #not displayed
             except IndexError:
                 return "UNKNOWN_INDEX"
         case "delete":
+            senderID = request.get("MYID", -1)
             index = request["Index"]
-            await storage.delete(index)
+            await storage.delete(index, senderID)
             return "DONE"
         case "deleteall":
-            await storage.deleteAll()
+            senderID = request.get("MYID", -1)
+            await storage.deleteAll(senderID)
             return "Done"
         case "close":
-            await storage.close()
             return "OK"
         case _:
             return f"Unknown Command {request}"
@@ -82,9 +88,15 @@ async def handler(websocket):
         async for message in websocket:
             request = json.loads(message)
 
-            response = await stub(request)
+            if request == "close":
+                await websocket.send(json.dumps("Connection closed"))
+                await websocket.close() 
+                #await websocket.server.close()
+                break
+            else:
+                response = await stub(request)
 
-            await websocket.send(json.dumps(response))
+                await websocket.send(json.dumps(response))
         
     except Exception as e:
         print(f"Error occoured in handler: {e}")

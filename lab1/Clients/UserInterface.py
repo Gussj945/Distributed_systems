@@ -84,7 +84,6 @@ def cmdHelp():
     print("help                     -- Show this help")
     print("exit                     -- Terminate this program")   
 
-
 if len(sys.argv) > 1:       # A parameter was given to the program ...
     port = int(sys.argv[1]) # Assume the first parameter is the port number of the server
     storage = BoardProxy.storage(port)  

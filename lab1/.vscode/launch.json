@@ -1,0 +1,35 @@
+{
+   
+    "version": "0.2.0",
+    "configurations": [
+
+            {
+            "name": "Run Server (BoardServer)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/SingleServer_Main.py",
+            "args": ["10000"],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Run Client (UserInterface)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/UserInterface.py",
+            "args": ["10000"],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+    ],
+    "compounds":[
+        {
+            "name": "Run Both (Server + Client)",
+            "configurations": ["Run Server (BoardServer)", 
+            "Run Client (UserInterface)"],
+            "parallel": true,
+            "stopAll": true
+        }
+      
+    ]
+}

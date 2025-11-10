@@ -25,7 +25,9 @@ class storage:
        
     def doOperation(self, request): 
         try: 
-            if self.connected != True:
+            if self.connected == False and request["Operation"] == "close":
+                 return "Server is closed"
+            elif self.connected == False:
                 self.connect()
             
             self.ws.send(json.dumps(request))
@@ -67,7 +69,12 @@ class storage:
         return self.doOperation(request)
         
     def close(self): 
-        request = {"Operation": "deleteAll"}
-        return self.doOperation(request)
+        request = {"Operation": "close"}
+        self.doOperation(request)
+        if self.connected and self.ws is not None:
+            self.ws.close()
+            self.connected = False
+            self.ws = None
+        return "Server and client is closed"
         
         
