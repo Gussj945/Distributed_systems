@@ -3,14 +3,51 @@
     "version": "0.2.0",
     "configurations": [
 
+
             {
-            "name": "Run Server (BoardServer)",
+            "name": "Run Server0 (BoardServer)",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/Server/SingleServer_Main.py",
             "args": ["10000"],
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": true
+        },
+        {
+            "name": "InformAllOtherServers_Main0",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServers_Main.py",
+            "args": ["0"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "InformAllOtherServers_Main1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServers_Main.py",
+            "args": ["1"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+           {
+            "name": "InformAllOtherServers_Main2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServers_Main.py",
+            "args": ["2"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "InformAllOtherServers_Main3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServers_Main.py",
+            "args": ["3"],
+            "console": "integratedTerminal",
+            "justMyCode": true
         },
         {
             "name": "Run Client (UserInterface)",
@@ -19,17 +56,83 @@
             "program": "${workspaceFolder}/Clients/UserInterface.py",
             "args": ["10000"],
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": true
+        },
+         {
+            "name": "Run Client0 (UserInterface)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/UserInterface.py",
+            "args": ["10000"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "Run Client1 (UserInterface)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/UserInterface.py",
+            "args": ["10001"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "Run Client2 (UserInterface)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/UserInterface.py",
+            "args": ["10002"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "Run Client3 (UserInterface)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/UserInterface.py",
+            "args": ["10003"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run Server (InformAllOtherServers_Main)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServers_Main.py",
+            "args": ["0, 1, 2, 3"],
+            "console": "externalTerminal",
+            "justMyCode": true
         },
     ],
     "compounds":[
         {
             "name": "Run Both (Server + Client)",
-            "configurations": ["Run Server (BoardServer)", 
-            "Run Client (UserInterface)"],
+            "configurations": ["Run Server0 (BoardServer)", 
+            "Run Client0 (UserInterface)"],
             "parallel": true,
             "stopAll": true
-        }
-      
+        },
+        {
+            "name": "Run InformAllOtherServers_Main (1 Server + 1 Client)",
+            "configurations": ["InformAllOtherServers_Main0",
+            "Run Client0 (UserInterface)",],
+            "parallel": true,
+            "stopAll": true
+        },
+
+
+         {
+            "name": "Run InformAllOtherServers_Main (4 Server + 4 Client)",
+            "configurations": ["InformAllOtherServers_Main0",
+            "InformAllOtherServers_Main1",
+            "InformAllOtherServers_Main2",
+            "InformAllOtherServers_Main3",
+            "Run Client0 (UserInterface)",
+            "Run Client1 (UserInterface)",
+            "Run Client2 (UserInterface)",
+            "Run Client3 (UserInterface)"],
+            "parallel": true,
+            "stopAll": true
+        },
     ]
 }

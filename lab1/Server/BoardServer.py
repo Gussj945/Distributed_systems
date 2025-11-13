@@ -88,10 +88,14 @@ async def handler(websocket):
         async for message in websocket:
             request = json.loads(message)
 
-            if request == "close":
-                await websocket.send(json.dumps("Connection closed"))
+            if request.get("Operation") == "close":
+                try: 
+                    await websocket.send(json.dumps("Connection closed"))
+                    # give client a moment to receive connection closed msg
+                    await asyncio.sleep(0.1)
+                except Exception:
+                    pass
                 await websocket.close() 
-                #await websocket.server.close()
                 break
             else:
                 response = await stub(request)

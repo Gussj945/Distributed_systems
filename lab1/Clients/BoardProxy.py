@@ -17,6 +17,7 @@ class storage:
         self.url = f"ws://localhost:{self.port}"
         self.ws = None
         self.connected = False
+        self.retry = 3
 
     def connect(self):
         if self.connected == False:
@@ -32,13 +33,24 @@ class storage:
             
             self.ws.send(json.dumps(request))
 
-            response_string = self.ws.recv()
+            response_string = self.ws.recv() #this doesnt work now why not?
 
             return json.loads(response_string)
+        except (websocket.WebSocketConnectionClosedException, ConnectionResetError) as e:
+            print(f"connection lost: {e}. Reconnecting...")
+
+            if self.retry > 0: 
+                self.connected = False
+                self.connect()
+                self.retry -= 1
+                return self.doOperation(request)
+            else:
+                print("Reconnection failed three times - giving up")
+                return None
             
-        
         except Exception as e: 
             print(f"Error during doOperation: {e}")
+
     def put(self, message): 
         request = {"Operation": "put", "Message": message}
         return self.doOperation(request)

@@ -10,7 +10,7 @@ logging.basicConfig(
 format= "%(asctime)s %(message)s",
 level=logging.DEBUG,
 )
-#await proxy.close() empties the board but I can use proxy.put("") immediately after is this expected?
+
 class storage: 
     def __init__(self, port, ID=0): 
         self.port = port
@@ -41,8 +41,9 @@ class storage:
         
         except Exception as e: 
             print(f"Error during doOperation: {e}")
-    async def put(self, message): 
-        request = {"Operation": "put", "Message": message, "MYID": self.MYID}
+
+    async def put(self, message, senderID): 
+        request = {"Operation": "put", "Message": message, "MYID": senderID}
         return await self.doOperation(request)
 
        
@@ -71,14 +72,26 @@ class storage:
         return await self.doOperation(request)
         
     async def close(self): 
-        request = "close"
-        await self.doOperation(request)
+        request = {"Operation": "close"}
+        try:
+            # Only try if still connected
+            if self.connected and self.ws is not None:
+                self.ws.send(json.dumps(request))
+                # optionally try to receive a response, but ignore if fails
+                # avoid connection closed error
+                try:
+                    _ = self.ws.recv()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        # Close local connection
         if self.connected and self.ws is not None:
-            await self.ws.close()
-            self.endConnection = True
-            self.connected = False
-            self.ws = None
-        return "Server and client is closed"
+            self.ws.close()
+        self.connected = False
+        self.ws = None
+        return "Server and client are closed"
 
 
         
