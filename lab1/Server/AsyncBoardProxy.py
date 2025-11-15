@@ -59,16 +59,16 @@ class storage:
         request = {"Operation": "getBoard", "MYID": self.MYID}
         return await self.doOperation(request)
         
-    async def modify(self, index, message): 
-        request = {"Operation": "modify", "Index": index, "Message": message, "MYID": self.MYID}
+    async def modify(self, index, message, senderID): 
+        request = {"Operation": "modify", "Index": index, "Message": message, "MYID": senderID}
         return await self.doOperation(request)
         
-    async def delete(self, index): 
-        request = {"Operation": "delete", "Index": index, "MYID": self.MYID}
+    async def delete(self, index, senderID): 
+        request = {"Operation": "delete", "Index": index, "MYID": senderID}
         return await self.doOperation(request)
 
-    async def deleteAll(self): 
-        request = {"Operation": "deleteAll", "MYID": self.MYID}
+    async def deleteAll(self, senderID): 
+        request = {"Operation": "deleteAll", "MYID": senderID}
         return await self.doOperation(request)
         
     async def close(self): 

@@ -36,9 +36,13 @@ def cmdGetNum():
     print(num, "messages in message board")    
 
 def cmdGetBoard():
-    board = storage.getBoard()
-    for index in range(len(board)): 
-        print(index, ":", board[index])
+    try: 
+        board = storage.getBoard()
+        for index in range(len(board)): 
+            print(index, ":", board[index])
+    except TypeError:
+        print("the board wasnt retrieved succesfully")
+    
 
 def cmdModify(argv): 
     try:

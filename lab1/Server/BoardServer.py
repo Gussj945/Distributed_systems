@@ -32,6 +32,7 @@ async def stub(request):
                        Example: {"COMMAND": "PUT", "MESSAGE": "How are you?"}
     Returns the response message. It is not yet encoded as JSON message.  
     """
+    print(f"server stub got request{request}")
     command = request.get("Operation", "").lower()
 
     match command:
@@ -62,7 +63,7 @@ async def stub(request):
                 index = request["Index"]
                 message = request["Message"]
                 result = await storage.modify(index, message, senderID)
-                return "DONE" #not displayed
+                return "DONE"
             except IndexError:
                 return "UNKNOWN_INDEX"
         case "delete":

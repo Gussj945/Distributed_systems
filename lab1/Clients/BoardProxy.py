@@ -33,10 +33,13 @@ class storage:
             
             self.ws.send(json.dumps(request))
 
-            response_string = self.ws.recv() #this doesnt work now why not?
+            response_string = self.ws.recv()
+            self.retry = 3
+            print(f"returned {response_string}")
 
             return json.loads(response_string)
-        except (websocket.WebSocketConnectionClosedException, ConnectionResetError) as e:
+        #websocket.WebSocketConnectionClosedException, ConnectionResetError
+        except (websocket.WebSocketConnectionClosedException, ConnectionResetError, ConnectionAbortedError) as e:
             print(f"connection lost: {e}. Reconnecting...")
 
             if self.retry > 0: 
@@ -50,6 +53,7 @@ class storage:
             
         except Exception as e: 
             print(f"Error during doOperation: {e}")
+            print(f"What eror is it: {type(e).__name__},{e.args}")
 
     def put(self, message): 
         request = {"Operation": "put", "Message": message}
