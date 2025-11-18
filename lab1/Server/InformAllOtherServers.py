@@ -15,25 +15,25 @@ class storage:
 
         match command:
             case "put":
-                message = request.get("Message", "").lower()
+                message = request.get("Message", "")
                 for i, proxy in enumerate(self.serversToInform):
-                    if i != self.myID:
+                    if i != senderID:
                         tasks.append(proxy.put(message, senderID))
             case "modify":
-                message = request.get("Message", "").lower()
-                index = request.get("Index", "").lower()
+                message = request.get("Message", "")
+                index = request.get("Index", "")
                 for i, proxy in enumerate(self.serversToInform):
-                    if i != self.myID:
+                    if i != senderID:
                         tasks.append(proxy.modify(index, message, senderID))
             case "delete":
-                index = request.get("Index", "").lower()
+                index = request.get("Index", "")
                 for i, proxy in enumerate(self.serversToInform):
-                    if i != self.myID:
+                    if i != senderID:
                         tasks.append(proxy.delete(index, senderID))
             case "deleteall":
                 for i, proxy in enumerate(self.serversToInform):
-                    if i != self.myID:
-                        tasks.append(proxy.deleteAll(self.myID))
+                    if i != senderID:
+                        tasks.append(proxy.deleteAll(senderID))
             case _:
                 return f"Unknown Command {request}"
         try:
@@ -49,17 +49,17 @@ class storage:
                 
 
     
-    async def put(self, message, serverID=0):
-        if serverID == -1:
+    async def put(self, message, senderID=0):
+        if senderID == -1:
             # this message comes from a client
             # exeute localy
-            await self.localStorage.put(message, self.myID)
+            await self.localStorage.put(message, senderID)
             # forward to other servers
             request = {"Operation": "put", "Message": message}
             await self.notify_proxies(request, self.myID)
             return "DONE"
         else:
-            return await self.localStorage.put(message, serverID)
+            return await self.localStorage.put(message, senderID)
 
     async def get(self, index, serverID=0): 
         return await self.localStorage.get(index, serverID)

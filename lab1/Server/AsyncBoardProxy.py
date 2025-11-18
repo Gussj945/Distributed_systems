@@ -5,11 +5,11 @@ import logging
 import websockets
 import asyncio
 import json
-
+""" 
 logging.basicConfig(
 format= "%(asctime)s %(message)s",
 level=logging.DEBUG,
-)
+) """
 
 class storage: 
     def __init__(self, port, ID=0): 

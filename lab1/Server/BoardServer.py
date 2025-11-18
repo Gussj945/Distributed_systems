@@ -5,10 +5,10 @@ import json
 from websockets.asyncio.server import serve
 import logging
 
-logging.basicConfig(
+""" logging.basicConfig(
     format= "%(asctime)s %(message)s",
     level=logging.DEBUG,
-)
+) """
 
 # Storage in which the messages of the message board are stored.
 storage = None

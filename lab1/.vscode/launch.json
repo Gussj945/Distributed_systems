@@ -14,6 +14,15 @@
             "justMyCode": true
         },
         {
+            "name": "SendDataToSeveralServers",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/SendDataToSeveralServers.py",
+            "args": ["4"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "InformAllOtherServers_Main0",
             "type": "debugpy",
             "request": "launch",
@@ -103,6 +112,42 @@
             "console": "externalTerminal",
             "justMyCode": true
         },
+        {
+            "name": "SendToCoordinatorAndBackToServers_Main0",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/SendToCoordinatorAndBackToServers_Main.py",
+            "args": ["0"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "SendToCoordinatorAndBackToServers_Main1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/SendToCoordinatorAndBackToServers_Main.py",
+            "args": ["1"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "SendToCoordinatorAndBackToServers_Main2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/SendToCoordinatorAndBackToServers_Main.py",
+            "args": ["2"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "SendToCoordinatorAndBackToServers_Main3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/SendToCoordinatorAndBackToServers_Main.py",
+            "args": ["3"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
     ],
     "compounds":[
         {
@@ -119,9 +164,7 @@
             "parallel": true,
             "stopAll": true
         },
-
-
-         {
+        {
             "name": "Run InformAllOtherServers_Main (4 Server + 4 Client)",
             "configurations": ["InformAllOtherServers_Main0",
             "InformAllOtherServers_Main1",
@@ -131,6 +174,39 @@
             "Run Client1 (UserInterface)",
             "Run Client2 (UserInterface)",
             "Run Client3 (UserInterface)"],
+            "parallel": true,
+            "stopAll": true
+        },
+        {
+            "name": "InformAllOtherServers TEST",
+            "configurations": ["InformAllOtherServers_Main0",
+            "InformAllOtherServers_Main1",
+            "InformAllOtherServers_Main2",
+            "InformAllOtherServers_Main3",
+            "SendDataToSeveralServers"],
+            "parallel": true,
+            "stopAll": true
+        },
+        {
+            "name": "Run SendToCoordinatorAndBackToServers (4 Server + 4 Client)",
+            "configurations": ["SendToCoordinatorAndBackToServers_Main0",
+            "SendToCoordinatorAndBackToServers_Main1",
+            "SendToCoordinatorAndBackToServers_Main2",
+            "SendToCoordinatorAndBackToServers_Main3",
+            "Run Client0 (UserInterface)",
+            "Run Client1 (UserInterface)",
+            "Run Client2 (UserInterface)",
+            "Run Client3 (UserInterface)"],
+            "parallel": true,
+            "stopAll": true
+        },
+        {
+            "name": "Run SendToCoordinatorAndBackToServers TEST",
+            "configurations": ["SendToCoordinatorAndBackToServers_Main0",
+            "SendToCoordinatorAndBackToServers_Main1",
+            "SendToCoordinatorAndBackToServers_Main2",
+            "SendToCoordinatorAndBackToServers_Main3",
+            "SendDataToSeveralServers"],
             "parallel": true,
             "stopAll": true
         },

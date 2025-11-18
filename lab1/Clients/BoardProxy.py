@@ -6,11 +6,11 @@ import websocket
 import asyncio
 import json
 
-logging.basicConfig(
+""" logging.basicConfig(
 format= "%(asctime)s %(message)s",
 level=logging.DEBUG,
 )
-
+ """
 class storage: 
     def __init__(self, port): 
         self.port = port
@@ -35,7 +35,6 @@ class storage:
 
             response_string = self.ws.recv()
             self.retry = 3
-            print(f"returned {response_string}")
 
             return json.loads(response_string)
         #websocket.WebSocketConnectionClosedException, ConnectionResetError
