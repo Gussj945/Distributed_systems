@@ -25,7 +25,7 @@ class storage:
         if self.connected == False:
             self.ws = await websockets.connect(self.url)
             self.connected = True
-       
+    #TODO add reconnect
     async def doOperation(self, request): 
         try: 
             async with self.lock:
@@ -44,7 +44,7 @@ class storage:
 
     async def put(self, message, senderID): 
         request = {"Operation": "put", "Message": message, "MYID": senderID}
-        return await self.doOperation(request)
+        return await self.doOperation(request) #add ID once in doOperation
 
        
     async def get(self, index): 

@@ -11,64 +11,62 @@ class storage:
         self.lock = asyncio.Lock()
 
     async def notify_proxies(self, request, senderID):
-
+       
         command = request.get("Operation", "").lower()
         tasks = [] 
         async with self.lock:
+            #execute locally within the lock
             match command:
                 case "put":
                     message = request.get("Message", "")
+                    await self.localStorage.put(message, senderID)
                     for i, proxy in enumerate(self.serversToInform):
                         if i != senderID:
                             print(f"ID som läggs till på listan {proxy.MYID}")
-                            tasks.append(proxy.put(message, senderID))
+                            tasks.append(proxy.put(message, self.myID))
+                    
                 case "modify":
                     message = request.get("Message", "")
                     index = request.get("Index", "")
                     for i, proxy in enumerate(self.serversToInform):
                         if i != senderID:    
-                            tasks.append(proxy.modify(index, message, senderID))
+                            tasks.append(proxy.modify(index, message, self.myID))
+                   
                 case "delete":
                     index = request.get("Index", "")
                     for i, proxy in enumerate(self.serversToInform):
                         if i != senderID:
-                            tasks.append(proxy.delete(index, senderID))
+                            tasks.append(proxy.delete(index, self.myID))
+                  
                 case "deleteall":
                     for i, proxy in enumerate(self.serversToInform):
                         if i != senderID:    
-                            tasks.append(proxy.deleteAll(senderID))
+                            tasks.append(proxy.deleteAll(self.myID))
                 case _:
                     return f"Unknown Command {request}"
         try:
-            result = []
-            for task in tasks:
-                result.append(await task)
-            if result == [None,None,None]:
-                return "Done"
-            else:
+            result = await asyncio.gather(*tasks)
+            if result != [None,None,None]:
                 return result
-            """ result = await asyncio.gather(*tasks)
-            if result == [None,None,None]:
-                return "Done"
             else:
-                return result """
+                return "Done" 
         except Exception as e:
             print(f"Exception in asyncio.gather in notify proxiex{e}")
-            return e
-            
+            return e 
+                
                 
 
     
     async def put(self, message, senderID=0):
-        if senderID == -1:
-            #forward to coordinator
-            return await self.serversToInform[self.coordinatorID].put(message, self.myID)            
-        elif self.myID == self.coordinatorID:
+                    
+        if self.myID == self.coordinatorID and senderID != self.coordinatorID:
             #forward to all servers
             request = {"Operation": "put", "Message": message}
-            await self.localStorage.put(message, senderID)
-            return await self.notify_proxies(request, self.myID)
-        elif senderID == self.coordinatorID:
+            return await self.notify_proxies(request, self.myID) #senderID
+        elif senderID == -1: #change place on this and the next if statement
+            #forward to coordinator
+            return await self.serversToInform[self.coordinatorID].put(message, senderID)
+        elif senderID == self.coordinatorID:# and self.myID != self.coordinatorID:
             #call comes from coordinator execute locally
             return await self.localStorage.put(message, senderID) 
 

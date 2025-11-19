@@ -44,7 +44,7 @@ async def stub(request):
         case "get":
             try:
                 index = request["Index"]
-                senderID = request.get("MYID", -1)
+                senderID = request.get("MYID", -1) #should just be done once for every command
                 result = await storage.get(index, senderID)
                 return result
             except IndexError:
