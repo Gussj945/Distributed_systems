@@ -20,6 +20,7 @@ class storage:
         self.endConnection = False
         self.lock = asyncio.Lock()
         self.MYID = ID
+        self.retry = 3
 
     async def connect(self):
         if self.connected == False:
@@ -37,10 +38,22 @@ class storage:
                 response_string = await self.ws.recv()
 
                 return json.loads(response_string)
-                
-        
+        except (ConnectionResetError, ConnectionAbortedError) as e:
+            print(f"connection lost (server side): {e}. Reconnecting...")
+
+            if self.retry > 0: 
+                self.connected = False
+                self.connect()
+                self.retry -= 1
+                return self.doOperation(request)
+            else:
+                print("Reconnection failed three times - giving up")
+                return None
+            
         except Exception as e: 
             print(f"Error during doOperation: {e}")
+            print(f"What eror is it: {type(e).__name__},{e.args}")
+                
 
     async def put(self, message, senderID): 
         request = {"Operation": "put", "Message": message, "MYID": senderID}

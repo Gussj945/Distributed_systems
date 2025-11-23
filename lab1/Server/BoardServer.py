@@ -35,31 +35,29 @@ async def stub(request):
     print(f"server stub got request{request}")
     command = request.get("Operation", "").lower()
 
+    senderID = request.get("MYID", -1)
     match command:
         case "put":
             message = request["Message"]
-            senderID = request.get("MYID", -1)
             result = await storage.put(message, senderID)
             return "Done"
         case "get":
             try:
                 index = request["Index"]
-                senderID = request.get("MYID", -1) #should just be done once for every command
+                 #should just be done once for every command
                 result = await storage.get(index, senderID)
                 return result
             except IndexError:
                 return "UNKNOWN_INDEX" #CLIENT DOESNT DETECT ERROR AND PRINTSS MESSAGE 0: NONE INSTEAD WHAT TO DO?
         case "getnum":
-            senderID = request.get("MYID", -1)
             result = await storage.getNum(senderID)
             return result
         case "getboard":
-            senderID = request.get("MYID", -1)
             result = await storage.getBoard(senderID)
             return result
         case "modify":
             try: 
-                senderID = request.get("MYID", -1)
+                
                 index = request["Index"]
                 message = request["Message"]
                 result = await storage.modify(index, message, senderID)
@@ -67,12 +65,12 @@ async def stub(request):
             except IndexError:
                 return "UNKNOWN_INDEX"
         case "delete":
-            senderID = request.get("MYID", -1)
+            
             index = request["Index"]
             await storage.delete(index, senderID)
             return "DONE"
         case "deleteall":
-            senderID = request.get("MYID", -1)
+            
             await storage.deleteAll(senderID)
             return "Done"
         case "close":
