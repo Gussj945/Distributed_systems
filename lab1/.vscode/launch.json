@@ -18,7 +18,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/Clients/SendDataToSeveralServers.py",
-            "args": ["4"],
+            "args": ["1000"],
             "console": "integratedTerminal",
             "justMyCode": true
         },
@@ -148,6 +148,42 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
+         {
+            "name": "UseMutexForUpdates_Main0",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdates_Main.py",
+            "args": ["0"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "UseMutexForUpdates_Main1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdates_Main.py",
+            "args": ["1"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "UseMutexForUpdates_Main2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdates_Main.py",
+            "args": ["2"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "UseMutexForUpdates_Main3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdates_Main.py",
+            "args": ["3"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
     ],
     "compounds":[
         {
@@ -206,6 +242,16 @@
             "SendToCoordinatorAndBackToServers_Main1",
             "SendToCoordinatorAndBackToServers_Main2",
             "SendToCoordinatorAndBackToServers_Main3",
+            "SendDataToSeveralServers"],
+            "parallel": true,
+            "stopAll": true
+        },
+        {
+            "name": "Run UseMutexForUpdates TEST",
+            "configurations": ["UseMutexForUpdates_Main0",
+            "UseMutexForUpdates_Main1",
+            "UseMutexForUpdates_Main2",
+            "UseMutexForUpdates_Main3",
             "SendDataToSeveralServers"],
             "parallel": true,
             "stopAll": true

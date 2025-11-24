@@ -37,6 +37,14 @@ async def stub(request):
 
     senderID = request.get("MYID", -1)
     match command:
+        case "election":
+            return await serverLeader.election(senderID)
+        case "areYouAlive":
+            return "YES"
+        case "acquire":     #TODO should I add Id to mutex?
+            return await serverMutex.acquire()
+        case "release":
+            return await serverMutex.release()
         case "put":
             message = request["Message"]
             result = await storage.put(message, senderID)
@@ -115,14 +123,18 @@ async def serverMain():
     
 
 # Called by the main module to start the server
-def startServer(portToUse, storageToUse, serverID=0): 
+def startServer(portToUse, storageToUse, serverID=0, mutex=None, leaderElection=None): 
     global port
     global storage
     global myID
+    global serverMutex
+    global serverLeader
     
+    myID = serverID #Forgot to implement this does it cause problems?
     port = portToUse
     storage = storageToUse
-
+    serverMutex = mutex #correct?
+    serverLeader = leaderElection
     asyncio.run(serverMain())
   
     

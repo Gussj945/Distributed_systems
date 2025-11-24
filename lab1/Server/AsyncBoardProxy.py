@@ -12,7 +12,7 @@ level=logging.DEBUG,
 ) """
 
 class storage: 
-    def __init__(self, port, ID=0): 
+    def __init__(self, port, ID=0, mutex=None, election=None): 
         self.port = port
         self.url = f"ws://localhost:{self.port}"
         self.ws = None
@@ -21,6 +21,8 @@ class storage:
         self.lock = asyncio.Lock()
         self.MYID = ID
         self.retry = 3
+        self.mutex = mutex
+        self.election = election
 
     async def connect(self):
         if self.connected == False:
@@ -36,7 +38,6 @@ class storage:
                 await self.ws.send(json.dumps(request))
 
                 response_string = await self.ws.recv()
-
                 return json.loads(response_string)
         except (ConnectionResetError, ConnectionAbortedError) as e:
             print(f"connection lost (server side): {e}. Reconnecting...")
@@ -53,7 +54,22 @@ class storage:
         except Exception as e: 
             print(f"Error during doOperation: {e}")
             print(f"What eror is it: {type(e).__name__},{e.args}")
-                
+
+    async def leaderElection(self):
+        request = {"Operation": "leaderElection", "MYID": self.MYID}
+        return await self.doOperation(request)
+
+    async def areYouAlive(self):
+        request = {"Operation": "areYouAlive", "MYID": self.MYID}
+        return await self.doOperation(request)
+    
+    async def acquire(self):
+        request = {"Operation": "acquire", "MYID": self.MYID}
+        return await self.doOperation(request)
+    
+    async def release(self):
+        request = {"Operation": "release", "MYID": self.MYID}
+        return await self.doOperation(request)
 
     async def put(self, message, senderID): 
         request = {"Operation": "put", "Message": message, "MYID": senderID}
