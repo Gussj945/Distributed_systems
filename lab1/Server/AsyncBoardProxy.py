@@ -12,7 +12,7 @@ level=logging.DEBUG,
 ) """
 
 class storage: 
-    def __init__(self, port, ID=0, mutex=None, election=None): 
+    def __init__(self, port, ID=0): #should mutex and election be here? should the proxie have a coordinatorID
         self.port = port
         self.url = f"ws://localhost:{self.port}"
         self.ws = None
@@ -21,8 +21,7 @@ class storage:
         self.lock = asyncio.Lock()
         self.MYID = ID
         self.retry = 3
-        self.mutex = mutex
-        self.election = election
+        
 
     async def connect(self):
         if self.connected == False:
@@ -39,24 +38,29 @@ class storage:
 
                 response_string = await self.ws.recv()
                 return json.loads(response_string)
-        except (ConnectionResetError, ConnectionAbortedError) as e:
+        except (ConnectionResetError, ConnectionAbortedError, ConnectionRefusedError) as e:
             print(f"connection lost (server side): {e}. Reconnecting...")
 
             if self.retry > 0: 
                 self.connected = False
-                self.connect()
+                await self.connect()
                 self.retry -= 1
                 return self.doOperation(request)
             else:
                 print("Reconnection failed three times - giving up")
-                return None
+                #return None New approach this might break things and require more try/except clauses
+                raise ConnectionRefusedError
             
         except Exception as e: 
             print(f"Error during doOperation: {e}")
-            print(f"What eror is it: {type(e).__name__},{e.args}")
+            print(f"(AsyncBoardProxy) What error is it: {type(e).__name__},{e.args}")
 
-    async def leaderElection(self):
-        request = {"Operation": "leaderElection", "MYID": self.MYID}
+    async def setCoordinator(self, newCoordID):
+        request = {"Operation": "setCoordinator", "MYID": self.MYID, "newCoordinatorID": newCoordID}
+        return await self.doOperation(request)
+
+    async def election(self):
+        request = {"Operation": "election", "MYID": self.MYID}
         return await self.doOperation(request)
 
     async def areYouAlive(self):
@@ -72,7 +76,7 @@ class storage:
         return await self.doOperation(request)
 
     async def put(self, message, senderID): 
-        request = {"Operation": "put", "Message": message, "MYID": senderID}
+        request = {"Operation": "put", "Message": message, "MYID": senderID} 
         return await self.doOperation(request) #add ID once in doOperation
 
        
@@ -105,11 +109,11 @@ class storage:
         try:
             # Only try if still connected
             if self.connected and self.ws is not None:
-                self.ws.send(json.dumps(request))
+                await self.ws.send(json.dumps(request))
                 # optionally try to receive a response, but ignore if fails
                 # avoid connection closed error
                 try:
-                    _ = self.ws.recv()
+                    _ = await self.ws.recv()
                 except Exception:
                     pass
         except Exception:
@@ -117,7 +121,7 @@ class storage:
 
         # Close local connection
         if self.connected and self.ws is not None:
-            self.ws.close()
+            await self.ws.close()
         self.connected = False
         self.ws = None
         return "Server and client are closed"

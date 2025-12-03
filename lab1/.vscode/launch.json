@@ -18,7 +18,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/Clients/SendDataToSeveralServers.py",
-            "args": ["1000"],
+            "args": ["4"],
             "console": "integratedTerminal",
             "justMyCode": true
         },
@@ -184,6 +184,15 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
+        {
+          "name": "TestLeaderElection",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/TestLeaderElection.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+        
     ],
     "compounds":[
         {
@@ -256,5 +265,20 @@
             "parallel": true,
             "stopAll": true
         },
+         {
+            "name": "1 client on noBlockMutex",
+            "configurations": ["UseMutexForUpdates_Main0",
+            "Run Client (UserInterface)"],
+            "parallel": true,
+            "stopAll": true
+        },
+        { 
+            "name": "debug TestLeaderElection",
+            "configurations": ["UseMutexForUpdates_Main0",
+            "UseMutexForUpdates_Main1",
+            "TestLeaderElection"],
+            "parallel": true,
+            "stopAll": true   
+        }
     ]
 }

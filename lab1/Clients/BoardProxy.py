@@ -52,7 +52,7 @@ class storage:
             
         except Exception as e: 
             print(f"Error during doOperation: {e}")
-            print(f"What eror is it: {type(e).__name__},{e.args}")
+            print(f"(BoardProxy) What eror is it: {type(e).__name__},{e.args}")
 
     def put(self, message): 
         request = {"Operation": "put", "Message": message}

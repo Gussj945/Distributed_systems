@@ -9,6 +9,7 @@ class election:
         """
         self.proxies = proxies
         self.myID = myID
+        self.coordinatorID = None
         
     async def getCoordinator(self): 
         """
@@ -32,7 +33,11 @@ class election:
         Parameter serverID: ID of the server to check if it is alive. 
         Returns True if the server is alive and False otherwise. 
         """
-        return "YES"
+        response = await self.proxies[serverID].areYouAlive()
+        if response == "YES":
+            return True
+        else:
+            return False
             
     async def callElection(self, serverID): 
         """
@@ -40,7 +45,12 @@ class election:
         Parameter serverID: ID of the server in which the method shall be called. 
         Returns the response of the server if the server responded and False otherwise. 
         """        
-        print("callElection() not implemented.")
+        try:
+            response = await self.proxies[serverID].election()
+            return response
+        except:
+            return False
+
 
     async def callSetCoordinator(self, serverID, coordinatorID): 
         """
@@ -49,7 +59,17 @@ class election:
         Parameter coordinatorID: ID of the new coordinator to be announce. 
         Returns True if this was successfull or False if a ConnectionRefusedError was thrown.
         """
-        print("callSetCoordinator() not implemented.")
+        try:
+            await self.proxies[serverID].setCoordinator(coordinatorID)
+            return True
+        except (ConnectionRefusedError):
+            return False
+        except Exception as e:
+            print(f"(LeaderElection callSetCoordinator) What error is it: {type(e).__name__},{e.args}")
+
+
+
+
 
         
     async def callSetCoordinatorInAllServers(self, coordinatorID): 
@@ -58,7 +78,20 @@ class election:
         Parameter coordinatorID: ID of the new coordinator to be announce. 
         The function is implemented by calling setCoordinator() on all servers.
         """
-        print("callSetCoordinatorInAllServers() not implemented.")
+        tasks = []
+        for server_id in range(len(self.proxies)):
+            if server_id == self.myID:
+                continue
+            tasks.append(self.callSetCoordinator(server_id, coordinatorID))
+
+        await asyncio.gather(*tasks)
+
+        
+
+               
+                
+     
+                    
         
     
     ########################################################
@@ -70,7 +103,6 @@ class election:
         Called from other servers to start the election process. 
         Always retuns "Take-Over".
         """
-        print("election() not implemented.")
         return "Take-Over"                     
         
     async def setCoordinator(self, coordinatorID):
@@ -78,4 +110,5 @@ class election:
         Called from to coordinator to inform the server about that it is coordinator. 
         Parameter coordinatorID: ID of the new coordinator. 
         """
-        print("setCoordinator() not implemented.")
+        self.coordinatorID = coordinatorID #?
+        return f"{coordinatorID} is the new coordinator"

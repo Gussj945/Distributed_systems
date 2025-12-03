@@ -8,6 +8,7 @@ class storage:
         self.leaderElection = leaderElection
         self.requestQueue = asyncio.Queue()
         self.worker_task = None
+        
 
     async def ensureWorkerRunning(self):
         if self.worker_task is None:
@@ -15,12 +16,12 @@ class storage:
 
 
     async def executeAndQueue(self, operation_name, senderID=0, *request):
-        coordinator = await self.leaderElection.getCoordinator()
-        coordinatorID = coordinator.MYID
+        #coordinator = await self.leaderElection.getCoordinator()
+        #coordinatorID = coordinator.MYID
         if senderID == -1:
             await self.ensureWorkerRunning()
             request_tuple = (operation_name, *request)
-            exp_Value = request_tuple[0]
+            #exp_Value = request_tuple[0]
             await self.requestQueue.put(request_tuple)
         else: 
             #we only enter here if a mutex call has been aquired in executeQueu
@@ -30,7 +31,7 @@ class storage:
     async def executeQueue(self):
         while True:
             request = await self.requestQueue.get()
-            command = request[0] #might be problem for delteAll who only has arg "deleteAll"
+            command = request[0] #might be problem for deleteAll who only has arg "deleteAll"
             
             coordinator = await self.leaderElection.getCoordinator()
 
@@ -50,11 +51,11 @@ class storage:
                 tasks = []
                 local_function = getattr(self.messageBoard, command)
 
-                await local_function(*request[1:], self.myID) # request[0] is function name await local_function(self.myID, *request[1:])
+                await local_function(*request[1:]) # request[0] is function name await local_function(self.myID, *request[1:])
                 for i, proxy in enumerate(self.proxies):
                     if i != self.myID:
                         proxy_function = getattr(proxy, command)
-                        tasks.append(proxy_function(*request[1:], self.myID)) #tasks.append(proxy_function(*request[1:], self.myID))
+                        tasks.append(proxy_function(*request[1:], self.myID)) 
                 if tasks:
                     await asyncio.gather(*tasks)
 

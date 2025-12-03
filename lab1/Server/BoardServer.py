@@ -37,9 +37,18 @@ async def stub(request):
 
     senderID = request.get("MYID", -1)
     match command:
+        case "setcoordinator":
+            if serverLeader: #TODO: Correct?                
+                newCoordinatorID = request["newCoordinatorID"]
+                return await serverLeader.setCoordinator(newCoordinatorID)
+            else:
+                return "ERROR"
         case "election":
-            return await serverLeader.election(senderID)
-        case "areYouAlive":
+            if serverLeader:
+                return await serverLeader.election()
+            else:
+                return "ERROR"
+        case "areyoualive":
             return "YES"
         case "acquire":     #TODO should I add Id to mutex?
             return await serverMutex.acquire()
