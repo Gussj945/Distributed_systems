@@ -5,10 +5,10 @@ import json
 from websockets.asyncio.server import serve
 import logging
 
-""" logging.basicConfig(
+logging.basicConfig(
     format= "%(asctime)s %(message)s",
     level=logging.DEBUG,
-) """
+) 
 
 # Storage in which the messages of the message board are stored.
 storage = None
@@ -36,64 +36,85 @@ async def stub(request):
     command = request.get("Operation", "").lower()
 
     senderID = request.get("MYID", -1)
+    if logicalClock:
+        timeStamp = request.get("TimeStamp", None)
+
+    # update logical clock (receive event)
+    if timeStamp and logicalClock:
+        logicalClock.updateTime(timeStamp)
+
+    response = {}
+
     match command:
         case "setcoordinator":
             if serverLeader: #TODO: Correct?                
                 newCoordinatorID = request["newCoordinatorID"]
-                return await serverLeader.setCoordinator(newCoordinatorID)
+                #return await serverLeader.setCoordinator(newCoordinatorID)
+                await serverLeader.setCoordinator(newCoordinatorID)
+                response["Result"] = "OK"
             else:
-                return "ERROR"
+                response["Result"] = "ERROR"
         case "election":
             if serverLeader:
-                return await serverLeader.election()
+                await serverLeader.election()
+                response["Result"] = "OK"
             else:
-                return "ERROR"
+                response["Result"] = "Error"
         case "areyoualive":
-            return "YES"
+            response["Result"] = "YES"
         case "acquire":     #TODO should I add Id to mutex?
-            return await serverMutex.acquire()
+            #return await serverMutex.acquire()
+            await serverMutex.acquire()
+            response["Result"] = "OK"
         case "release":
-            return await serverMutex.release()
+            await serverMutex.release()
+            response["Result"] = "OK"
         case "put":
             message = request["Message"]
             result = await storage.put(message, senderID)
-            return "Done"
+            response["Result"] = "DONE"
         case "get":
             try:
                 index = request["Index"]
                  #should just be done once for every command
                 result = await storage.get(index, senderID)
-                return result
+                response["Result"] = result
             except IndexError:
-                return "UNKNOWN_INDEX" #CLIENT DOESNT DETECT ERROR AND PRINTSS MESSAGE 0: NONE INSTEAD WHAT TO DO?
+                response["Result"] = "UNKNOWN INDEX"
         case "getnum":
             result = await storage.getNum(senderID)
-            return result
+            response["Result"] = result
         case "getboard":
             result = await storage.getBoard(senderID)
-            return result
+            response["Result"] = result
         case "modify":
             try: 
                 
                 index = request["Index"]
                 message = request["Message"]
                 result = await storage.modify(index, message, senderID)
-                return "DONE"
+                response["Result"] = "DONE"
             except IndexError:
-                return "UNKNOWN_INDEX"
+                response["Result"] = "UNKNOWN INDEX"
         case "delete":
             
             index = request["Index"]
             await storage.delete(index, senderID)
-            return "DONE"
+            response["Result"] = "DONE"
         case "deleteall":
-            
             await storage.deleteAll(senderID)
-            return "Done"
+            response["Result"] = "DONE"
         case "close":
-            return "OK"
+            response["Result"] = "DONE"
         case _:
             return f"Unknown Command {request}"
+        
+    # Outgoing timestamp (send event)
+    if logicalClock:
+        response["TimeStamp"] = logicalClock.getTime()
+
+    return response
+
 
 
 #########################################################
@@ -132,18 +153,20 @@ async def serverMain():
     
 
 # Called by the main module to start the server
-def startServer(portToUse, storageToUse, serverID=0, mutex=None, leaderElection=None): 
+def startServer(portToUse, storageToUse, serverID=0, mutex=None, leaderElection=None, logicalClockParam=None): 
     global port
     global storage
     global myID
     global serverMutex
     global serverLeader
+    global logicalClock
     
     myID = serverID #Forgot to implement this does it cause problems?
     port = portToUse
     storage = storageToUse
     serverMutex = mutex #correct?
     serverLeader = leaderElection
+    logicalClock = logicalClockParam
     asyncio.run(serverMain())
   
     

@@ -21,7 +21,6 @@ class storage:
         if senderID == -1:
             await self.ensureWorkerRunning()
             request_tuple = (operation_name, *request)
-            #exp_Value = request_tuple[0]
             await self.requestQueue.put(request_tuple)
         else: 
             #we only enter here if a mutex call has been aquired in executeQueu
@@ -51,7 +50,7 @@ class storage:
                 tasks = []
                 local_function = getattr(self.messageBoard, command)
 
-                await local_function(*request[1:]) # request[0] is function name await local_function(self.myID, *request[1:])
+                await local_function(*request[1:], self.myID) # request[0] is function name await local_function(self.myID, *request[1:])
                 for i, proxy in enumerate(self.proxies):
                     if i != self.myID:
                         proxy_function = getattr(proxy, command)

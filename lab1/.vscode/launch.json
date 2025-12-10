@@ -18,6 +18,15 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/Clients/SendDataToSeveralServers.py",
+            "args": ["1000"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+           {
+            "name": "SendDataToSeveralServers 4",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Clients/SendDataToSeveralServers.py",
             "args": ["4"],
             "console": "integratedTerminal",
             "justMyCode": true
@@ -184,15 +193,43 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
-        {
-          "name": "TestLeaderElection",
+         {
+            "name": "UseMutexForUpdatesWithClock_Main0",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/TestLeaderElection.py",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdatesWithClock_Main.py",
+            "args": ["0"],
             "console": "integratedTerminal",
             "justMyCode": true
-        }
-        
+        },
+        {
+            "name": "UseMutexForUpdatesWithClock_Main1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdatesWithClock_Main.py",
+            "args": ["1"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "UseMutexForUpdatesWithClock_Main2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdatesWithClock_Main.py",
+            "args": ["2"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "UseMutexForUpdatesWithClock_Main3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/UseMutexForUpdatesWithClock_Main.py",
+            "args": ["3"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+       
     ],
     "compounds":[
         {
@@ -261,24 +298,20 @@
             "UseMutexForUpdates_Main1",
             "UseMutexForUpdates_Main2",
             "UseMutexForUpdates_Main3",
-            "SendDataToSeveralServers"],
+            "SendDataToSeveralServers 4"],
             "parallel": true,
             "stopAll": true
         },
          {
-            "name": "1 client on noBlockMutex",
-            "configurations": ["UseMutexForUpdates_Main0",
-            "Run Client (UserInterface)"],
+            "name": "Run UseMutexForUpdatesWithClock TEST",
+            "configurations": ["UseMutexForUpdatesWithClock_Main0",
+            "UseMutexForUpdatesWithClock_Main1",
+            "UseMutexForUpdatesWithClock_Main2",
+            "UseMutexForUpdatesWithClock_Main3",
+            "SendDataToSeveralServers 4"],
             "parallel": true,
             "stopAll": true
         },
-        { 
-            "name": "debug TestLeaderElection",
-            "configurations": ["UseMutexForUpdates_Main0",
-            "UseMutexForUpdates_Main1",
-            "TestLeaderElection"],
-            "parallel": true,
-            "stopAll": true   
-        }
+
     ]
 }

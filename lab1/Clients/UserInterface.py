@@ -22,8 +22,9 @@ def cmdPut(argv):
 def cmdGet(argv): 
     try:
         index = argv[1]
-        message = storage.get(index)
-        print("Message", index, ":", message)
+        resultJson = storage.get(index)
+        result = resultJson["Result"]
+        print("Message", result["index"], ":", result["message"])
     except ValueError: 
         print("Message with index", index, "is not stored on server.")
     except IndexError: 
@@ -37,7 +38,8 @@ def cmdGetNum():
 
 def cmdGetBoard():
     try: 
-        board = storage.getBoard()
+        boardJson = storage.getBoard()
+        board = boardJson["Result"]
         for index in range(len(board)): 
             print(index, ":", board[index])
     except TypeError:

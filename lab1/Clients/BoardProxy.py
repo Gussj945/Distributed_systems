@@ -69,7 +69,8 @@ class storage:
         
     def getBoard(self): 
         request = {"Operation": "getBoard"}
-        return self.doOperation(request)
+        result = self.doOperation(request)
+        return result["Result"]
         
     def modify(self, index, message): 
         request = {"Operation": "modify", "Index": index, "Message": message}
