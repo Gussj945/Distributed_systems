@@ -22,7 +22,7 @@ class storage:
         self.MYID = ID
         self.retry = 3
         self.logicalClock = logicalClock
-        #self.logicalClock 
+        
         
 
     async def connect(self):

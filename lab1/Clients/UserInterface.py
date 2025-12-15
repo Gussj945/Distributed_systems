@@ -38,8 +38,7 @@ def cmdGetNum():
 
 def cmdGetBoard():
     try: 
-        boardJson = storage.getBoard()
-        board = boardJson["Result"]
+        board = storage.getBoard()
         for index in range(len(board)): 
             print(index, ":", board[index])
     except TypeError:

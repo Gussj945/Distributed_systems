@@ -229,6 +229,43 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
+        {
+            "name": "InformAllOtherServersWithClock_Main0",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServersWithClock_Main.py",
+            "args": ["0"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "InformAllOtherServersWithClock_Main1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServersWithClock_Main.py",
+            "args": ["1"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "InformAllOtherServersWithClock_Main2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServersWithClock_Main.py",
+            "args": ["2"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+         {
+            "name": "InformAllOtherServersWithClock_Main3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/Server/InformAllOtherServersWithClock_Main.py",
+            "args": ["3"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+      
        
     ],
     "compounds":[
@@ -259,13 +296,26 @@
             "parallel": true,
             "stopAll": true
         },
+          { 
+            "name": "Run InformAllOtherServers_Main (4 Server + 4 Client)",
+            "configurations": ["InformAllOtherServers_Main0",
+            "InformAllOtherServers_Main1",
+            "InformAllOtherServers_Main2",
+            "InformAllOtherServers_Main3",
+            "Run Client0 (UserInterface)",
+            "Run Client1 (UserInterface)",
+            "Run Client2 (UserInterface)",
+            "Run Client3 (UserInterface)"],
+            "parallel": true,
+            "stopAll": true
+        },
         {
             "name": "InformAllOtherServers TEST",
             "configurations": ["InformAllOtherServers_Main0",
             "InformAllOtherServers_Main1",
             "InformAllOtherServers_Main2",
             "InformAllOtherServers_Main3",
-            "SendDataToSeveralServers"],
+            "SendDataToSeveralServers 4"],
             "parallel": true,
             "stopAll": true
         },
@@ -309,6 +359,29 @@
             "UseMutexForUpdatesWithClock_Main2",
             "UseMutexForUpdatesWithClock_Main3",
             "SendDataToSeveralServers 4"],
+            "parallel": true,
+            "stopAll": true
+        },
+         { 
+            "name": "Run stamp TEST",
+            "configurations": ["InformAllOtherServersWithClock_Main0",
+            "InformAllOtherServersWithClock_Main1",
+            "InformAllOtherServersWithClock_Main2",
+            "InformAllOtherServersWithClock_Main3",
+            "Run Client0 (UserInterface)",
+            "Run Client1 (UserInterface)",
+            "Run Client2 (UserInterface)",
+            "Run Client3 (UserInterface)",],
+            "parallel": true,
+            "stopAll": true
+        },
+         { 
+            "name": "Run stamp TEST TASK 4",
+            "configurations": ["InformAllOtherServersWithClock_Main0",
+            "InformAllOtherServersWithClock_Main1",
+            "InformAllOtherServersWithClock_Main2",
+            "InformAllOtherServersWithClock_Main3",
+            "SendDataToSeveralServers 4",],
             "parallel": true,
             "stopAll": true
         },

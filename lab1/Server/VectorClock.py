@@ -1,4 +1,5 @@
 import json
+import copy
 
 class clock: 
     def __init__(self, numberServers, myID): 
@@ -51,6 +52,9 @@ class clock:
             self.vectorClock[i] = max(clock, timeFromOtherServer[i])
         
         self.vectorClock[self.myID] += 1
+
+    def getTimeShallow(self) -> list[int]:
+        return list(self.vectorClock)  # or list(self.clock) or self.clock.copy()
         
 def equal(time1, time2): 
     """
@@ -113,6 +117,8 @@ def totalOrder(time1, time2):
         return -1
     else:
         return 1
+    
+
 
     
     #here we are concurrent

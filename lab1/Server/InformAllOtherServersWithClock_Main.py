@@ -29,7 +29,7 @@ logicalClock = VectorClock.clock(len(serverPorts), serverID)
 serversToInformAboutChanges = [AsyncBoardProxy.storage(serverPorts[id], serverID, logicalClock) for id in range(len(serverPorts))]
 
 # Create storage containing data of this server. 
-# localStorage = AsyncBoardStorage.storage() 
+#localStorage = AsyncBoardStorage.storage() 
 localStorage = AsyncBoardStorage.storage(InformAllOtherServersWithClock.storage.compareMessages) 
 
 # Create object with distribution algorithm 

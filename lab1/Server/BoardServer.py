@@ -85,11 +85,10 @@ async def stub(request):
             result = await storage.getNum(senderID)
             response["Result"] = result
         case "getboard":
-            result = await storage.getBoard(senderID)
+            result = await storage.getBoard(senderID) #result dict [TimeStamp: latestTimeStamp, board]
             response["Result"] = result
         case "modify":
-            try: 
-                
+            try:                
                 index = request["Index"]
                 message = request["Message"]
                 result = await storage.modify(index, message, senderID)
