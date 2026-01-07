@@ -19,7 +19,7 @@ class storage:
         self.connected = False
         self.endConnection = False
         self.lock = asyncio.Lock()
-        self.MYID = ID
+        self.myID = ID #from MYID to myID
         self.retry = 3
         self.logicalClock = logicalClock
         
@@ -64,23 +64,23 @@ class storage:
             print(f"(AsyncBoardProxy) What error is it: {type(e).__name__},{e.args}")
 
     async def setCoordinator(self, newCoordID, timeStamp=None):
-        request = {"Operation": "setCoordinator", "MYID": self.MYID, "newCoordinatorID": newCoordID, "TimeStamp": timeStamp}
+        request = {"Operation": "setCoordinator", "MYID": self.myID, "newCoordinatorID": newCoordID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
 
     async def election(self, timeStamp=None):
-        request = {"Operation": "election", "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "election", "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
 
     async def areYouAlive(self, timeStamp=None):
-        request = {"Operation": "areYouAlive", "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "areYouAlive", "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
     
     async def acquire(self, timeStamp=None):
-        request = {"Operation": "acquire", "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "acquire", "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
     
     async def release(self, timeStamp=None):
-        request = {"Operation": "release", "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "release", "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
 
     async def put(self, message, senderID, timeStamp=None): 
@@ -89,19 +89,19 @@ class storage:
 
        
     async def get(self, index, timeStamp=None): 
-        request = {"Operation": "get", "Index": index, "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "get", "Index": index, "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
 
     async def getNum(self, timeStamp=None): 
-        request = {"Operation": "getNum", "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "getNum", "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
         
     async def getBoard(self, timeStamp=None): 
-        request = {"Operation": "getBoard", "MYID": self.MYID, "TimeStamp": timeStamp}
+        request = {"Operation": "getBoard", "MYID": self.myID, "TimeStamp": timeStamp}
         return await self.doOperation(request)
         
     async def modify(self, index, message, senderID, timeStamp=None): 
-        request = {"Operation": "modify", "Index": index, "Message": message, "MYID": senderID, "TimeStamp": timeStamp}
+        request = {"Operation": "modify", "Index": index, "Message": message, "MYID": senderID, "TimeStamp": timeStamp} #senderID ?!
         return await self.doOperation(request)
         
     async def delete(self, index, senderID, timeStamp=None): 

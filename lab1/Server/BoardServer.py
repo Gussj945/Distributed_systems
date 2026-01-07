@@ -38,10 +38,9 @@ async def stub(request):
     senderID = request.get("MYID", -1)
     if logicalClock:
         timeStamp = request.get("TimeStamp", None)
-
+        if timeStamp != None: 
     # update logical clock (receive event)
-    if timeStamp and logicalClock:
-        logicalClock.updateTime(timeStamp)
+            logicalClock.updateTime(timeStamp)
 
     response = {}
 
@@ -63,12 +62,16 @@ async def stub(request):
         case "areyoualive":
             response["Result"] = "YES"
         case "acquire":     #TODO should I add Id to mutex?
+            if serverMutex == None:
+                response["Result"] = "Error"
             #return await serverMutex.acquire()
-            await serverMutex.acquire()
-            response["Result"] = "OK"
+            mutex = await serverMutex.acquire()
+            response["Result"] = mutex
         case "release":
-            await serverMutex.release()
-            response["Result"] = "OK"
+            if serverMutex == None:
+                response["Result"] = "Error"
+            result = await serverMutex.release()
+            response["Result"] = result
         case "put":
             message = request["Message"]
             result = await storage.put(message, senderID)
